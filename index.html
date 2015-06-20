@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{Title}</title>
+    {block:Description}
+    <meta name="description" content="{MetaDescription}">
+    {/block:Description}
+    <link rel="shortcut icon" href="{Favicon}">
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="{RSS}">
+    <link rel="stylesheet" href="application.css" media="screen">
+    <link rel="stylesheet" href="http://static.tumblr.com/0gknviz/IJQnq7lca/normalize.css">
+    <link rel="stylesheet" href="http://static.tumblr.com/0gknviz/CXrnq7lca/skeleton.css">
+
+    <style type="text/css">
+
+body {    
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+hgroup {
+  text-align: center;
+}
+#bodywrapper {
+  width: 500px;
+  margin: 0 auto 0 auto;
+  padding: 250px 0 0 0;
+}
+header {
+  width:100%;
+  height:200px;
+  position:fixed;
+  background-color:white;
+  border-style: solid;
+  border-width: 0 0 1px 0;
+}
+.headerpic {
+  position: relative;
+  margin: 0 auto 0 auto;
+  top:0px;
+  width:100px;
+  float:center;
+}
+.headerpic img {
+  width:100%;
+  height:auto;
+  border-style: solid;
+  border-radius: 100px;
+  border-width: 2px;
+  border-color: black;
+}
+.clip-circle {
+  clip-path: circle(60px at center);
+}
+
+#title {
+  text-decoration: none;
+  padding: 60px 0 0 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+#menu {
+  background: rgba(0,0,0,0.5);
+  height:auto;
+  width:auto;
+}
+
+#menu_right {
+  float:right;
+  width: 40%;
+  text-align: left;
+}
+
+#menu_left {
+  float:left;
+  width:40%;
+  text-align: right;
+}
+    </style>
+
+
+
+  </head>
+
+  <body>
+
+    <header>
+      <hgroup>
+         <h1 id="title"><a href="/">{Title}</a></h1>
+        {block:Description}
+          <h2>{Description}</h2>
+        {/block:Description}
+
+        <div id="menu">
+          <div id="menu_left">
+           Links
+         </div>
+         <div id="menu_right">
+            Cats
+         </div>
+      </div>
+      </hgroup>
+      <div class="headerpic">
+        <img class="clip-circle" align="middle" src="http://www.american.edu/uploads/profiles/large/chris_palmer_profile_11.jpg"/>
+      </div>
+    </header>
+
+<div id="bodywrapper">
+    <section class="posts">
+      {block:Posts}
+
+        {block:Regular}
+        <article class="regular post">
+          {block:Title}<h2 class="title">{Title}</h2>{/block:Title}
+          {Body}
+
+          <section class="post-meta">
+            <time datetime="{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}" class="permalink" pubdate ><a href="{Permalink}">{Month} {DayOfMonth}, {Year}</a></time>
+          </section>
+        </article>
+        {/block:Regular}
+
+        {block:Photo}
+        <article class="photo post">
+          <img src="{PhotoURL-HighRes}" alt="{PhotoAlt}">
+
+          <section class="post-meta">
+            <div class="caption">{Caption}</div>
+            <time datetime="{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}" class="permalink" pubdate ><a href="{Permalink}">{Month} {DayOfMonth}, {Year}</a></time>
+          </section>
+        </article>
+        {/block:Photo}
+
+        {block:Quote}
+        <article class="quote {length} post">
+          <div class="quoteactual"><q>{Quote}</q></div>
+
+          <section class="post-meta">
+            <div class="source"><span class="emdash">&mdash;</span>{Source}</div>
+            <time datetime="{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}" class="permalink" pubdate ><a href="{Permalink}">{Month} {DayOfMonth}, {Year}</a></time>
+          </section>
+        </article>
+        {/block:Quote}
+
+        {block:Link}
+        <article class="link post">
+          <p><a href="{URL}" class="link" {Target}>{Name}</a></p>
+          <div class="description">{Description}</div>
+          <time datetime="{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}" class="permalink" pubdate ><a href="{Permalink}">{Month} {DayOfMonth}, {Year}</a></time>
+        </article>
+        {/block:Link}
+
+        {block:Conversation}
+        <article class="conversation post">
+          <ul>
+            {block:Lines}
+            <li class="{Alt}">
+              {block:Label}<span class="label">{Label}</span>{/block:Label}
+            {Line}
+            </li>
+            {/block:Lines}
+          </ul>
+          <time datetime="{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}" class="permalink" pubdate ><a href="{Permalink}">{Month} {DayOfMonth}, {Year}</a></time>
+        </article>
+        {/block:Conversation}
+
+        {block:Audio}
+        <article class="audio post">
+          {AudioPlayerWhite}
+          <div class="caption">{block:Caption}{Caption}{/block:Caption}{block:ExternalAudio} [<a href="{ExternalAudioURL}">Download</a>]{/block:ExternalAudio}</div>
+          <time datetime="{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}" class="permalink" pubdate ><a href="{Permalink}">{Month} {DayOfMonth}, {Year}</a></time>
+        </article>
+        {/block:Audio}
+
+        {block:Video}
+        <article class="video post">
+          {Video-500}
+
+          <section class="post-meta">
+            <div class="caption">{Caption}</div>
+            <time datetime="{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}" class="permalink" pubdate ><a href="{Permalink}">{Month} {DayOfMonth}, {Year}</a></time>
+          </section>
+        </article>
+        {/block:Video}
+      {/block:Posts}
+    </div>
+
+      {block:Pagination}
+      <div id="pagination">
+        <div id="older-link">{block:NextPage}<a href="{NextPage}">&larr; Older</a>{/block:NextPage}</div>
+        <div id="page-count">{CurrentPage} <span>of</span> {TotalPages}</div>
+        <div id="newer-link">{block:PreviousPage}<a href="{PreviousPage}">Newer &rarr;</a>{/block:PreviousPage}</div>
+      </div>
+      {/block:Pagination}
+    </section>
+
+  </body>
+</html>
