@@ -1,202 +1,404 @@
 <!DOCTYPE html>
+
+
+<!--
+TODO (roughly by urgency):
+    - add onHover metadata and permalinks for each post
+    - clean up HTML and CSS regarding the header / title
+    - build a better way of accessing the filters
+    - find a place to put menu options
+        - consider that it may be too much to have two
+          dropdown menus, and the filters may work better
+          as dropdown menus than the normal menu would.
+
+BUGS (roughly also by urgency):
+    - photosets are classified as videos (what the heck)
+          
+          
+          
+FAQ:
+
+Q: Why are all the stylesheets and scripts included here?
+A: Because otherwise I would have to reupload them seperately all the time. It would be slow and awful and get in the way of rapid prototyping. Also, when uploaded as assets, their URL changes every time I'm pretty sure so that'd be an awful amount of re-writing code that could easily be avoided.
+
+Q: What's all the menu bullshit in the CSS?
+A: It's mostly deprecated but I'm keeping it around for now. It uses table cells to make a menu on either side of the title, but I didn't like the way it looked so I commented it out in the HTML
+
+-->
+
+
+
+
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>{Title}</title>
-    {block:Description}
-    <meta name="description" content="{MetaDescription}">
-    {/block:Description}
-    <link rel="shortcut icon" href="{Favicon}">
-    <link rel="alternate" type="application/rss+xml" title="RSS" href="{RSS}">
-    <link rel="stylesheet" href="application.css" media="screen">
-    <link rel="stylesheet" href="http://static.tumblr.com/0gknviz/IJQnq7lca/normalize.css">
-    <link rel="stylesheet" href="http://static.tumblr.com/0gknviz/CXrnq7lca/skeleton.css">
+<head>
+  <meta charset="utf-8">
+  <title>{Title}</title>
+  {block:Description}
+  <meta name="description" content="{MetaDescription}">
+  {/block:Description}
+  <link rel="shortcut icon" href="{Favicon}">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="{RSS}">
+  <link rel="stylesheet" href="application.css" media="screen">
+  <link rel="stylesheet" href="http://static.tumblr.com/0gknviz/IJQnq7lca/normalize.css">
+  <link rel="stylesheet" href="http://static.tumblr.com/0gknviz/CXrnq7lca/skeleton.css">
+  
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script type="text/javascript" src="http://codysherman.tumblr.com/tools/infinite-scrolling/code"></script>
 
-    <style type="text/css">
+  <style type="text/css">
 
-body {    
+  body {    
     margin: 0 !important;
     padding: 0 !important;
-}
+  }
 
-hgroup {
-  text-align: center;
-}
-#bodywrapper {
-  width: 500px;
-  margin: 0 auto 0 auto;
-  padding: 250px 0 0 0;
-}
-header {
-  width:100%;
-  height:200px;
-  position:fixed;
-  background-color:white;
-  border-style: solid;
-  border-width: 0 0 1px 0;
-}
-.headerpic {
-  position: relative;
-  margin: 0 auto 0 auto;
-  top:0px;
-  width:100px;
-  float:center;
-}
-.headerpic img {
-  width:100%;
-  height:auto;
-  border-style: solid;
-  border-radius: 100px;
-  border-width: 2px;
-  border-color: black;
-}
-.clip-circle {
-  clip-path: circle(60px at center);
-}
+  hgroup {
+    text-align: center;
+  }
+  #bodywrapper {
+    width: 500px;
+    margin: 0 auto 0 auto;
+    padding: 230px 0 0 0;
+  }
+  header {
+    width:100%;
+    height:90px;
+    position:fixed;
+    background-color:white;
+    border-style: solid;
+    border-width: 0 0 0px 0;
+  }
+  
+  #menu {
+      margin: 0 auto 0 auto;
+      border:0px;
+  }
+  
+  #title {
+      margin:0;
+      padding:0;
+  }
+  
+  table#menu tr td {
+      vertical-align:middle;
+      border:none;
+      margin:0;
+      padding:5 10 5 10;
+  }
+  
+  table#menu a{
+      list-style-type:none;
+      margin:0;
+      padding:0 0px 0 0px;
+      display:inline;
+      text-decoration:none;
+      color:black
+      
+  }
+  
+  .menu_link {
+      font-size:12px;
+      padding:0 30px 0 30px;
+  }
+  
+  #headerbottom {
+      height:20px;
+      width:500px;
+      margin: 0 auto 0 auto;
+      position:absolute;
+      bottom:0;
+      left:0;
+      right:0;
+      border-width: 0 0 1px 0;
+      border-style:solid;
+      border-color:gray;
+      font-size:13px;
+      color:#111111;
+  }
+  
+  #headerwrapper {
+      position:relative;
+      height:100%;
+  }
+  
+  .filter {
+      cursor:pointer;
+  }
+  /*helper classes for toggling filter buttons*/
+  .no {
+      color:black;
+  }
+  
+  .yes {
+      color:gray;
+  }
+  
+  #filters {
+      display:block;
+  }
+  
+  /*keeps images from exceeding width of column*/
+  img {
+      max-width:500px;
+      height:auto;
+  }
+  
+  </style>
 
-#title {
-  text-decoration: none;
-  padding: 60px 0 0 0;
-}
-
-a {
-  text-decoration: none;
-}
-
-#menu {
-  background: rgba(0,0,0,0.5);
-  height:auto;
-  width:auto;
-}
-
-#menu_right {
-  float:right;
-  width: 40%;
-  text-align: left;
-}
-
-#menu_left {
-  float:left;
-  width:40%;
-  text-align: right;
-}
-    </style>
 
 
+</head>
 
-  </head>
+<body>
 
-  <body>
-
-    <header>
-      <hgroup>
-         <h1 id="title"><a href="/">{Title}</a></h1>
-        {block:Description}
-          <h2>{Description}</h2>
-        {/block:Description}
-
-        <div id="menu">
-          <div id="menu_left">
-           Links
-         </div>
-         <div id="menu_right">
-            Cats
-         </div>
-      </div>
-      </hgroup>
-      <div class="headerpic">
-        <img class="clip-circle" align="middle" src="http://www.american.edu/uploads/profiles/large/chris_palmer_profile_11.jpg"/>
-      </div>
-    </header>
+  <header>
+  <div id="headerwrapper">
+    <hgroup>
+      <table id="menu">
+      <tr>
+          <td><h1 id="title">{Title}</h1></td>
+      </tr>
+      </table>
+      
+      <!-- Commented out description, for now.
+    {block:Description}
+    <h2>{Description}</h2>
+    {/block:Description}
+    -->
+    
+    <div id="headerbottom">
+    <div class="filters">
+        <span class="no filter" id="togglePhoto">photos</span> | 
+        <span class="no filter" id="toggleAudio">audio</span> | 
+        <span class="no filter" id="toggleText">text</span> | 
+        <span class="no filter" id="toggleVideo">videos</span> | 
+        <span class="no filter" id="toggleQuote">quotes</span> | 
+        <span class="no filter" id="toggleConversation">conversations</span> | 
+        <span class="no filter" id="toggleLink">links</span>
+        </div>
+    </div>
+    
+  </hgroup>
+  </div>
+</header>
 
 <div id="bodywrapper">
-    <section class="posts">
-      {block:Posts}
+  <section class="posts">
+  
+  <div id="posts">
+    {block:Posts}
 
-        {block:Regular}
-        <article class="regular post">
-          {block:Title}<h2 class="title">{Title}</h2>{/block:Title}
-          {Body}
+    {block:Regular}
+    <article class="regular post">
+      {block:Title}<h2 class="title">{Title}</h2>{/block:Title}
+      {Body}
 
-          <section class="post-meta">
-            <time datetime="{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}" class="permalink" pubdate ><a href="{Permalink}">{Month} {DayOfMonth}, {Year}</a></time>
-          </section>
-        </article>
-        {/block:Regular}
+      <section class="post-meta">
+        <time datetime="{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}" class="permalink" pubdate ><a href="{Permalink}">{Month} {DayOfMonth}, {Year}</a></time>
+      </section>
+    </article>
+    {/block:Regular}
+    
+    
 
-        {block:Photo}
-        <article class="photo post">
-          <img src="{PhotoURL-HighRes}" alt="{PhotoAlt}">
+    {block:Photo}
+    <article class="photo post">
+      <img src="{PhotoURL-HighRes}" alt="{PhotoAlt}">
 
-          <section class="post-meta">
-            <div class="caption">{Caption}</div>
-            <time datetime="{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}" class="permalink" pubdate ><a href="{Permalink}">{Month} {DayOfMonth}, {Year}</a></time>
-          </section>
-        </article>
-        {/block:Photo}
+      <section class="post-meta">
+        <div class="caption">{Caption}</div>
+        <time datetime="{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}" class="permalink" pubdate ><a href="{Permalink}">{Month} {DayOfMonth}, {Year}</a></time>
+      </section>
+    </article>
+    {/block:Photo}
 
-        {block:Quote}
-        <article class="quote {length} post">
-          <div class="quoteactual"><q>{Quote}</q></div>
+    {block:Quote}
+    <article class="quote {length} post">
+      <div class="quoteactual"><q>{Quote}</q></div>
 
-          <section class="post-meta">
-            <div class="source"><span class="emdash">&mdash;</span>{Source}</div>
-            <time datetime="{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}" class="permalink" pubdate ><a href="{Permalink}">{Month} {DayOfMonth}, {Year}</a></time>
-          </section>
-        </article>
-        {/block:Quote}
+      <section class="post-meta">
+        <div class="source"><span class="emdash">&mdash;</span>{Source}</div>
+        <time datetime="{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}" class="permalink" pubdate ><a href="{Permalink}">{Month} {DayOfMonth}, {Year}</a></time>
+      </section>
+    </article>
+    {/block:Quote}
 
-        {block:Link}
-        <article class="link post">
-          <p><a href="{URL}" class="link" {Target}>{Name}</a></p>
-          <div class="description">{Description}</div>
-          <time datetime="{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}" class="permalink" pubdate ><a href="{Permalink}">{Month} {DayOfMonth}, {Year}</a></time>
-        </article>
-        {/block:Link}
+    {block:Link}
+    <article class="link post">
+      <p><a href="{URL}" class="link" {Target}>{Name}</a></p>
+      <div class="description">{Description}</div>
+      <time datetime="{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}" class="permalink" pubdate ><a href="{Permalink}">{Month} {DayOfMonth}, {Year}</a></time>
+    </article>
+    {/block:Link}
 
-        {block:Conversation}
-        <article class="conversation post">
-          <ul>
-            {block:Lines}
-            <li class="{Alt}">
-              {block:Label}<span class="label">{Label}</span>{/block:Label}
-            {Line}
-            </li>
-            {/block:Lines}
-          </ul>
-          <time datetime="{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}" class="permalink" pubdate ><a href="{Permalink}">{Month} {DayOfMonth}, {Year}</a></time>
-        </article>
-        {/block:Conversation}
+    {block:Conversation}
+    <article class="conversation post">
+      <ul>
+        {block:Lines}
+        <li class="{Alt}">
+          {block:Label}<span class="label">{Label}</span>{/block:Label}
+          {Line}
+        </li>
+        {/block:Lines}
+      </ul>
+      <time datetime="{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}" class="permalink" pubdate ><a href="{Permalink}">{Month} {DayOfMonth}, {Year}</a></time>
+    </article>
+    {/block:Conversation}
 
-        {block:Audio}
-        <article class="audio post">
-          {AudioPlayerWhite}
-          <div class="caption">{block:Caption}{Caption}{/block:Caption}{block:ExternalAudio} [<a href="{ExternalAudioURL}">Download</a>]{/block:ExternalAudio}</div>
-          <time datetime="{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}" class="permalink" pubdate ><a href="{Permalink}">{Month} {DayOfMonth}, {Year}</a></time>
-        </article>
-        {/block:Audio}
+    {block:Audio}
+    <article class="audio post">
+      {AudioPlayerWhite}
+      <div class="caption">{block:Caption}{Caption}{/block:Caption}{block:ExternalAudio} [<a href="{ExternalAudioURL}">Download</a>]{/block:ExternalAudio}</div>
+      <time datetime="{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}" class="permalink" pubdate ><a href="{Permalink}">{Month} {DayOfMonth}, {Year}</a></time>
+    </article>
+    {/block:Audio}
 
-        {block:Video}
-        <article class="video post">
-          {Video-500}
+    {block:Video}
+    <article class="video post">
+      {Video-500}
 
-          <section class="post-meta">
-            <div class="caption">{Caption}</div>
-            <time datetime="{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}" class="permalink" pubdate ><a href="{Permalink}">{Month} {DayOfMonth}, {Year}</a></time>
-          </section>
-        </article>
-        {/block:Video}
-      {/block:Posts}
+      <section class="post-meta">
+        <div class="caption">{Caption}</div>
+        <time datetime="{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}" class="permalink" pubdate ><a href="{Permalink}">{Month} {DayOfMonth}, {Year}</a></time>
+      </section>
+    </article>
+    {/block:Video}
+    
+    {block:Photoset}
+    <article class="post photoset">
+    {Photoset-500}      
+        <section class="post-meta">
+        <div class="caption">{Caption}</div>
+        <time datetime="{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}" class="permalink" pubdate ><a href="{Permalink}">{Month} {DayOfMonth}, {Year}</a></time>
+      </section>
+                    </article>
+    {/block:Photoset}
+                
+    {/block:Posts}
     </div>
+  </div>
+  
+<!--commented out pagination-->
+  <!--{block:Pagination}-->
+  <!--<div id="pagination">-->
+  <!--  <div id="older-link">{block:NextPage}<a href="{NextPage}">&larr; Older</a>{/block:NextPage}</div>-->
+  <!--  <div id="page-count">{CurrentPage} <span>of</span> {TotalPages}</div>-->
+  <!--  <div id="newer-link">{block:PreviousPage}<a href="{PreviousPage}">Newer &rarr;</a>{/block:PreviousPage}</div>-->
+  <!--</div>-->
+  <!--{/block:Pagination}-->
+  
+</section>
 
-      {block:Pagination}
-      <div id="pagination">
-        <div id="older-link">{block:NextPage}<a href="{NextPage}">&larr; Older</a>{/block:NextPage}</div>
-        <div id="page-count">{CurrentPage} <span>of</span> {TotalPages}</div>
-        <div id="newer-link">{block:PreviousPage}<a href="{PreviousPage}">Newer &rarr;</a>{/block:PreviousPage}</div>
-      </div>
-      {/block:Pagination}
-    </section>
 
-  </body>
+<script>
+
+var photosShown = true;
+var textsShown = true;
+var videosShown = true;
+var quotesShown = true;
+var chatsShown = true;
+var audiosShown = true;
+var linksShown = true;
+
+var TOGGLE_SPEED = 500;
+
+    $(document).ready(function(){
+        //to help keep track of invisible changes when reloading browser
+        alert("v0.0.18\nFixed the filter bug! Touch title to hide filter list");
+        
+            $("#title").click(function(){
+               $("#filters").slideToggle(TOGGLE_SPEED);
+               
+            });
+        
+            $("#togglePhoto").click(function(){
+                if (photosShown) {
+                    $(".photo").slideUp(TOGGLE_SPEED);
+                    photosShown = false;
+                }
+                else {
+                    $(".photo").slideDown(TOGGLE_SPEED);
+                    photosShown = true;
+                }
+            });
+            
+            $("#toggleText").click(function(){
+                if (textsShown) {
+                    $(".regular").slideUp(TOGGLE_SPEED);
+                    textsShown = false;
+                }
+                else {
+                    $(".regular").slideDown(TOGGLE_SPEED);
+                    textsShown = true;
+                }
+                });
+            
+            $("#toggleVideo").click(function(){
+                if (videosShown) {
+                    $(".video").slideUp(TOGGLE_SPEED);
+                    videosShown = false;
+                }
+                else {
+                    $(".video").slideDown(TOGGLE_SPEED);
+                    videosShown = true;
+                }
+             });
+            
+            $("#toggleQuote").click(function(){
+                if (quotesShown) {
+                    $(".quote").slideUp(TOGGLE_SPEED);
+                    quotesShown = false;
+                }
+                else {
+                    $(".quote").slideDown(TOGGLE_SPEED);
+                    quotesShown = true;
+                }
+             });
+            
+            $("#toggleConversation").click(function(){
+                if (chatsShown) {
+                    $(".conversation").slideUp(TOGGLE_SPEED);
+                    chatsShown = false;
+                }
+                else {
+                    $(".conversation").slideDown(TOGGLE_SPEED);
+                    chatsShown = true;
+                }
+             });
+            
+            $("#toggleAudio").click(function(){
+                if (audiosShown) {
+                    $(".audio").slideUp(TOGGLE_SPEED);
+                    audiosShown = false;
+                }
+                else {
+                    $(".audio").slideDown(TOGGLE_SPEED);
+                    audiosShown = true;
+                }
+             });
+            
+            $("#toggleLink").click(function(){
+                if (linksShown) {
+                    $(".link").slideUp(TOGGLE_SPEED);
+                    linksShown = false;
+                }
+                else {
+                    $(".link").slideDown(TOGGLE_SPEED);
+                    linksShown = true;
+                }
+             });
+            
+            //the toggleClass method is so fucking powerful
+            $('.no').click(function() {
+    $(this).toggleClass('yes');
+});
+
+            //show and hide photos, change color of text
+            
+        
+        
+    });
+</script>
+
+</body>
 </html>
